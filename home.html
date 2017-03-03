@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <title>TIC-TAC-TOE game</title>
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+ <style>
+    #game {
+     overflow: auto;
+     width: 300px
+     height: 300px;
+     border: 1px solid #ddd;
+     background-image: url("game.jpg");
+     background-repeat: repeat;
+     padding: 10px;
+     margin : 50px auto;
+         }
+
+    #game div {
+     clear: both;
+     margin: 0 auto;
+     width: 300px;
+ 
+              }
+
+    #game button {
+     display: block;
+     float: left;
+     width: 50px;
+     height: 50px;
+     margin: 5px 10px;
+     color: white;
+     background-color:black;
+                 }
+
+    #gameActionDisplay {
+     padding: 20px 10px;
+     text-align : center;
+     font-style:oblique;
+     font-size: 20px;
+                       }
+    #reset { 
+	 padding:5px 10px;
+	 color:black; 
+	 font-family:Arial, Helvetica, sans-serif; 
+	 font-size:20px; 
+	 clear:both; cursor:pointer; 
+	 float:left; text-align:center; 
+	 text-transform:uppercase; 
+	 outline:none; 
+	 width:204px}
+
+</style>
+
+</head>
+
+<body onload="startGame();">
+
+    <div id="game" class= "vikas">
+
+        <div>
+           <button></button>
+           <button></button>
+           <button></button>
+        </div>
+
+        <div>
+           <button></button>
+           <button></button>
+           <button></button>
+        </div>
+
+        <div>
+           <button></button>
+           <button></button>
+           <button></button>
+        </div>
+    </div>
+
+    <div id="gameActionDisplay"></div>
+
+
+    <button  class="vikas" a href="#" id="reset" onClick="history.go(0)" > Restart </a></button>
+	
+
+<script>
+
+
+var Display = function(displayElement) {
+  var display = displayElement;
+  function setText(message) {
+    display.innerText = message;
+ }
+
+  return {setMessage: setText};
+};
+
+function isValid(btn) {
+  return btn.innerText.length == 0;
+}
+
+function checkScore(btn, squares) {
+  console.log("click");
+  console.log(btn);
+  console.log(squares);
+}
+
+function setMark(btn, players, currentTurn) {
+  btn.innerText = players[currentTurn];
+}
+
+function checkForWinner(squares, players, currentTurn) {
+  if (squares[0].innerText == players[currentTurn] &&
+      squares[1].innerText == players[currentTurn] &&
+      squares[2].innerText == players[currentTurn])
+    return true;
+
+  if (squares[3].innerText == players[currentTurn] &&
+      squares[4].innerText == players[currentTurn] &&
+     squares[5].innerText == players[currentTurn])
+   return true;
+
+  if (squares[6].innerText == players[currentTurn] &&
+     squares[7].innerText == players[currentTurn] &&
+      squares[8].innerText == players[currentTurn])
+    return true;
+
+  if (squares[0].innerText == players[currentTurn] &&
+      squares[3].innerText == players[currentTurn] &&
+      squares[6].innerText == players[currentTurn])
+    return true;
+
+  if (squares[1].innerText == players[currentTurn] &&
+      squares[4].innerText == players[currentTurn] &&
+      squares[7].innerText == players[currentTurn])
+    return true;
+
+  if (squares[2].innerText == players[currentTurn] &&
+      squares[5].innerText == players[currentTurn] &&
+      squares[8].innerText == players[currentTurn])
+    return true;
+
+  if (squares[0].innerText == players[currentTurn] &&
+     squares[4].innerText == players[currentTurn] &&
+      squares[8].innerText == players[currentTurn])
+    return true;
+
+ if (squares[2].innerText == players[currentTurn] &&
+     squares[4].innerText == players[currentTurn] &&
+      squares[6].innerText == players[currentTurn])
+    return true;
+
+  return false;
+}
+
+function isFullBoard(squares) {
+  for (var i = 0, len = squares.length; i < len; i++)
+    if (squares[i].innerText.length == 0)
+      return false;
+
+  return true;
+}
+
+function isDraw(squares) {
+  return (!checkForWinner(squares, ["X"], 0)) && isFullBoard(squares);
+}
+
+function main() {
+  var squares = document.querySelectorAll("#game button");
+  var players = ["X", "O"];
+  var currentTurn = 0;
+  var isGameOver = false;
+  var display = new Display(document.querySelector("#gameActionDisplay"));
+
+  display.setMessage("Player 'X' begins");
+
+ for (var i = 0, len = squares.length; i < len; i++)
+    squares[i].addEventListener("click", function(){
+     if (isGameOver)
+        return;
+
+      if (!isValid(this)) {
+       display.setMessage("Invalid choice");
+      } else {
+        setMark(this, players, currentTurn);
+
+       isGameOver = checkForWinner(squares, players, currentTurn);
+       if (isGameOver) {
+          display.setMessage("Player '" + players[currentTurn] + "' WINS!");
+          return;
+        }
+
+        if (isDraw(squares)) {
+         display.setMessage("DRAW!");
+         return;
+       }
+
+       currentTurn += 1;
+        currentTurn %= 2;
+
+       display.setMessage("Player '" + players[currentTurn] + "' to move");
+      }
+
+    });
+}
+
+(function(){ main();})();
+</script>
+</body>
+</html>
